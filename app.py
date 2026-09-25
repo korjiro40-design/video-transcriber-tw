@@ -4,6 +4,10 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+FONT = ("Microsoft JhengHei UI", 10)
+FONT_SMALL = ("Microsoft JhengHei UI", 9)
+FONT_TITLE = ("Microsoft JhengHei UI", 20, "bold")
+
 
 def ts(sec):
     ms = int(round(sec * 1000))
@@ -26,8 +30,8 @@ class App:
         frame = ttk.Frame(root, padding=20)
         frame.pack(fill="both", expand=True)
 
-        ttk.Label(frame, text="影片逐字稿", font=("Microsoft JhengHei UI", 20, "bold")).pack(anchor="w")
-        ttk.Label(frame, text="選取影片或音訊，按一下即可產生繁體中文 TXT 與 SRT。", font=("Microsoft JhengHei UI", 10)).pack(anchor="w", pady=(4, 16))
+        ttk.Label(frame, text="影片逐字稿", font=FONT_TITLE).pack(anchor="w")
+        ttk.Label(frame, text="選取影片或音訊，按一下即可產生繁體中文 TXT 與 SRT。", font=FONT).pack(anchor="w", pady=(4, 16))
 
         buttons = ttk.Frame(frame)
         buttons.pack(fill="x")
@@ -36,14 +40,14 @@ class App:
         self.start_btn = ttk.Button(buttons, text="開始生成逐字稿", command=self.start)
         self.start_btn.pack(side="right")
 
-        self.listbox = tk.Listbox(frame, height=8, font=("Microsoft JhengHei UI", 10))
+        self.listbox = tk.Listbox(frame, height=8, font=FONT)
         self.listbox.pack(fill="both", expand=True, pady=12)
 
         self.progress = ttk.Progressbar(frame, mode="indeterminate")
         self.progress.pack(fill="x")
         self.status = tk.StringVar(value="請先選取檔案")
-        ttk.Label(frame, textvariable=self.status, font=("Microsoft JhengHei UI", 10)).pack(anchor="w", pady=(8, 0))
-        ttk.Label(frame, text="第一次使用會下載 Whisper turbo 模型；NVIDIA GPU 優先，失敗會自動改用 CPU。", font=("Microsoft JhengHei UI", 9)).pack(anchor="w", pady=(8, 0))
+        ttk.Label(frame, textvariable=self.status, font=FONT).pack(anchor="w", pady=(8, 0))
+        ttk.Label(frame, text="第一次使用會下載 Whisper turbo 模型；NVIDIA GPU 優先，失敗會自動改用 CPU。", font=FONT_SMALL).pack(anchor="w", pady=(8, 0))
 
     def pick_files(self):
         paths = filedialog.askopenfilenames(
@@ -135,7 +139,7 @@ class App:
                     pass
         except Exception as e:
             self.set_status("發生錯誤")
-            self.root.after(0, lambda: messagebox.showerror("處理失敗", str(e)))
+            self.root.after(0, lambda err=str(e): messagebox.showerror("處理失敗", err))
         finally:
             self.root.after(0, self.finish_ui)
 
@@ -146,10 +150,6 @@ class App:
 
 def main():
     root = tk.Tk()
-    try:
-        root.option_add("*Font", "Microsoft JhengHei UI 10")
-    except Exception:
-        pass
     App(root)
     root.mainloop()
 
