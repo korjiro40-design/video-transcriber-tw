@@ -8,6 +8,7 @@ on:
       - 'app.py'
       - 'requirements.txt'
       - '影片逐字稿.bat'
+      - 'README.md'
       - '.github/workflows/build-windows.yml'
 
 jobs:
@@ -40,7 +41,7 @@ jobs:
           New-Item -ItemType Directory -Force portable | Out-Null
           Copy-Item "dist/影片逐字稿.exe" portable/
           Copy-Item "影片逐字稿.bat" portable/
-          Copy-Item README.md portable/
+          if (Test-Path "README.md") { Copy-Item "README.md" portable/ }
           Compress-Archive -Path portable/* -DestinationPath "影片逐字稿-Windows-x64.zip" -Force
 
       - name: Upload portable build
