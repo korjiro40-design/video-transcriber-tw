@@ -33,14 +33,13 @@ jobs:
       - name: Build EXE
         shell: pwsh
         run: |
-          pyinstaller --noconfirm --clean --onefile --console --name "影片逐字稿" --collect-all faster_whisper --collect-all ctranslate2 --collect-all tokenizers --collect-all opencc app.py
+          pyinstaller --noconfirm --clean --onefile --windowed --name "影片逐字稿" --collect-all faster_whisper --collect-all ctranslate2 --collect-all tokenizers --collect-all opencc app.py
 
       - name: Make portable ZIP
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force portable | Out-Null
           Copy-Item "dist/影片逐字稿.exe" portable/
-          Copy-Item "影片逐字稿.bat" portable/
           if (Test-Path "README.md") { Copy-Item "README.md" portable/ }
           Compress-Archive -Path portable/* -DestinationPath "影片逐字稿-Windows-x64.zip" -Force
 
